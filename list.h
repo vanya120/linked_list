@@ -154,10 +154,10 @@ public:
         return ListConstIterator{ nullptr };
     }
 
-    //    ListIterator find(const T& val) {
-    //        auto it = static_cast<const List &>(*this).find(val);
-    //        return {const_cast<ListNode<T>*>(it.get())};
-    //    }
+    ListIterator find(const T& val) {
+        auto it = static_cast<const List &>(*this).find(val);
+        return ListIterator{const_cast<ListNode<T>*>(it.get())};
+    }
 
     void remove_first() {
         if (is_empty()) return;
@@ -181,6 +181,7 @@ public:
         last = p;
     }
 
+    //Удаление по значению
     void remove(T value) {
         if (is_empty()) return;
         if (first->value == value) {
@@ -205,6 +206,28 @@ public:
         }
         slow->next = fast->next;
         delete fast;
+    }
+
+    //Удаление по итератору
+    void erase(ListConstIterator It)
+    {
+        auto ptr = const_cast<ListNode<T>*>(It.get());
+        if (ptr)
+        {
+            auto Delete = ptr->next;
+            if (ptr->next)
+            {
+                ptr->next = ptr->next->next;
+            }
+            delete Delete;
+        }
+        else
+        {
+            assert(first != nullptr);
+            auto temp = first;
+            first = first->next;
+            delete temp;
+        }
     }
 
     void reversed() {
